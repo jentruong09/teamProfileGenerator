@@ -6,7 +6,7 @@ const Employee = require('../lib/employee')
 
 describe('Employee', () => {
     it('correct input for employee object', () => {
-        const employee = new Employee('jen','100','email@email.com') //change this to be an example of each? 
+        const employee = new Employee('jen','100','email@email.com') 
 
         expect(employee.name).toBe('jen') //to let the test expect a string in return for the name
         expect(employee.id).toBe('100') // to let the test expect number(s) in return for the id
