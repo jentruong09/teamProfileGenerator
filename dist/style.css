@@ -1,0 +1,11 @@
+/* Styling for the header */
+.jumbotron {
+    background-color: rgb(222, 83, 83);
+    text-align: center;
+    color: white;
+}
+
+.member {
+    justify-content: center;
+    display: inline-block;
+}

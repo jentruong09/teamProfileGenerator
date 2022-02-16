@@ -3,12 +3,14 @@ const fs = require('fs')
 const inquirer = require('inquirer')
 
 // To link to generate HTML js
-const createHTML = require('./src/createHTML')
+const createHTML = require('./src/createHTML.js')
 
 //Linking the information for each employee
 const Manager = require('./lib/manager')
 const Engineer = require('./lib/engineer')
 const Intern = require('./lib/intern')
+const { data } = require('browserslist')
+const { default: generate } = require('@babel/generator')
 
 
 // Array for all the answers for the team - for all employees
@@ -66,10 +68,11 @@ const managerInquiry = () => {
             {
                 type: 'list',
                 message: 'Who would you like to add next?',
-                choices: ['Engineer', 'Intern', 'I do not have anyone else to add']
+                choices: ['Engineer', 'Intern', 'I do not have anyone else to add'],
+                name: 'newMember'
             }
         ])
-        // logging the answers for the team manager
+        // logging the answers for the team manager 
         .then(managerAnswers => {
             const {name, id, email, officeNumber} = managerAnswers;
             const manager = new Manager(name, id, email, officeNumber);
@@ -77,17 +80,17 @@ const managerInquiry = () => {
             arrayTeamAnswer.push(manager);
             
             //newPrompt
-            if (choices === 'Engineer') {
+            if (managerAnswers.newMember === 'Engineer') {
                 return engineerInquiry();
             }
-            else if (choices === 'Intern') {
+            else if (managerAnswers.newMember === 'Intern') {
                 return internInquiry();
             }
-            else if (choices === 'I do not have anyone else to add') {
-                return createHTML()
+            else if (managerAnswers.newMember === 'I do not have anyone else to add') {
+                return generateHTML(arrayTeamAnswer);
             }
         })
-}
+};
 
 
 // Question for Engineer
@@ -141,9 +144,28 @@ const engineerInquiry = () => {
             {
                 type: 'list',
                 message: 'Who would you like to add next?',
-                choices: ['Engineer', 'Intern', 'I do not have anyone else to add']
+                choices: ['Engineer', 'Intern', 'I do not have anyone else to add'],
+                name: 'newMember'
             }
         ])
+        // logging the answers for the engineer
+        .then(engineerAnswers => {
+            const {name, id, email, github} = engineerAnswers;
+            const engineer = new Engineer(name, id, email, github);
+
+            arrayTeamAnswer.push(engineer);
+            
+            //newPrompt
+            if (engineerAnswers.newMember === 'Engineer') {
+                return engineerInquiry();
+            }
+            else if (engineerAnswers.newMember === 'Intern') {
+                return internInquiry();
+            }
+            else if (engineerAnswers.newMember === 'I do not have anyone else to add') {
+                return generateHTML(arrayTeamAnswer);
+            }
+        })
 }
 
 
@@ -188,8 +210,8 @@ const internInquiry = () => {
                 type: 'input',
                 message: "What school does the intern attend?",
                 name: 'school',
-                validate: github => {
-                    if (github.length < 1) {
+                validate: school => {
+                    if (school.length < 1) {
                         return console.log("Please enter the school that the intern attends.")
                     }
                     return true;
@@ -198,15 +220,45 @@ const internInquiry = () => {
             {
                 type: 'list',
                 message: 'Who would you like to add next?',
-                choices: ['Engineer', 'Intern', 'I do not have anyone else to add']
+                choices: ['Engineer', 'Intern', 'I do not have anyone else to add'],
+                name: 'newMember'
             }
         ])
+        // logging the answers for the intern
+        .then(internAnswers => {
+            const {name, id, email, school} = internAnswers;
+            const intern = new Intern(name, id, email, school);
+
+            arrayTeamAnswer.push(intern);
+            
+            //newPrompt
+            if (internAnswers.newMember === 'Engineer') {
+                return engineerInquiry();
+            }
+            else if (internAnswers.newMember === 'Intern') {
+                return internInquiry();
+            }
+            else if (internAnswers.newMember === 'I do not have anyone else to add') {
+                return generateHTML(arrayTeamAnswer);
+            }
+        })
 }
 
 
-// function to initialize app - 
- function createHTML(data) {
-     fs.writeFile('./dist/index.html', createHTML(data), (err) =>
+//The index.html will generate, data is not pulling --- named it too many different things -- change them (change return as well for all 3 else if returns)
+
+// 
+function generateHTML(data) {
+    fs.writeFile('./dist/index.html', createHTML(data), (err) =>
         err ? console.log(err) : console.log('Your file has generated!')
-     );
- }
+    );
+}
+
+
+
+function init() {
+    return managerInquiry();
+}
+
+
+init();
