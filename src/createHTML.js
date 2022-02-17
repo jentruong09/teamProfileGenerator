@@ -117,7 +117,7 @@ const fullPage = fullTeam => {
             <header>
                 <div class="jumbotron jumbotron-fluid" style="background:rgb(222, 83, 83)">
                     <div class="container">
-                    <h1 class="display-4 style="text-align: center; color: white;"">My Team</h1>
+                    <h1 class="display-4" style="text-align: center; color: white;">My Team</h1>
                     </div>
                 </div>
             </header>
