@@ -9,12 +9,10 @@ const createHTML = require('./src/createHTML.js')
 const Manager = require('./lib/manager')
 const Engineer = require('./lib/engineer')
 const Intern = require('./lib/intern')
-const { data } = require('browserslist')
-const { default: generate } = require('@babel/generator')
 
 
 // Array for all the answers for the team - for all employees
-const arrayTeamAnswer = [];
+const dataArray = [];
 
 
 // Question for Manager
@@ -77,8 +75,8 @@ const managerInquiry = () => {
             const {name, id, email, officeNumber} = managerAnswers;
             const manager = new Manager(name, id, email, officeNumber);
 
-            arrayTeamAnswer.push(manager);
-            
+            dataArray.push(manager);
+            console.log(manager)
             //newPrompt
             if (managerAnswers.newMember === 'Engineer') {
                 return engineerInquiry();
@@ -87,7 +85,7 @@ const managerInquiry = () => {
                 return internInquiry();
             }
             else if (managerAnswers.newMember === 'I do not have anyone else to add') {
-                return generateHTML(arrayTeamAnswer);
+                return generateHTML(dataArray);
             }
         })
 };
@@ -153,7 +151,8 @@ const engineerInquiry = () => {
             const {name, id, email, github} = engineerAnswers;
             const engineer = new Engineer(name, id, email, github);
 
-            arrayTeamAnswer.push(engineer);
+            dataArray.push(engineer);
+            console.log(engineer)
             
             //newPrompt
             if (engineerAnswers.newMember === 'Engineer') {
@@ -163,7 +162,7 @@ const engineerInquiry = () => {
                 return internInquiry();
             }
             else if (engineerAnswers.newMember === 'I do not have anyone else to add') {
-                return generateHTML(arrayTeamAnswer);
+                return generateHTML(dataArray);
             }
         })
 }
@@ -229,7 +228,8 @@ const internInquiry = () => {
             const {name, id, email, school} = internAnswers;
             const intern = new Intern(name, id, email, school);
 
-            arrayTeamAnswer.push(intern);
+            dataArray.push(intern);
+            console.log(intern)
             
             //newPrompt
             if (internAnswers.newMember === 'Engineer') {
@@ -239,7 +239,7 @@ const internInquiry = () => {
                 return internInquiry();
             }
             else if (internAnswers.newMember === 'I do not have anyone else to add') {
-                return generateHTML(arrayTeamAnswer);
+                return generateHTML(dataArray);
             }
         })
 }
@@ -247,7 +247,7 @@ const internInquiry = () => {
 
 //The index.html will generate, data is not pulling --- named it too many different things -- change them (change return as well for all 3 else if returns)
 
-// 
+//Change this to how the profile generator is??
 function generateHTML(data) {
     fs.writeFile('./dist/index.html', createHTML(data), (err) =>
         err ? console.log(err) : console.log('Your file has generated!')
@@ -257,7 +257,7 @@ function generateHTML(data) {
 
 
 function init() {
-    return managerInquiry();
+    managerInquiry();
 }
 
 
